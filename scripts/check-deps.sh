@@ -46,7 +46,7 @@ done
 
 echo
 echo "== Extra commands =="
-for cmd in awww awww-daemon qs mouse-actions hyprpicker swayosd-client swayosd-server playerctl; do
+for cmd in awww awww-daemon qs mouse-actions hyprpicker swayosd-client swayosd-server playerctl cliphist curl; do
     check_cmd "$cmd" 0
 done
 
@@ -58,6 +58,7 @@ check_path "hyprlock colors" "$HOME/.cache/matugen/hypr/colors.conf" 0
 check_path "rofi config dir" "$HOME/.config/rofi" 0
 check_path "tray QQ icon" "$NIRI_TRAY_QQ_ICON" 0
 check_path "tray WeChat icon" "$NIRI_TRAY_WECHAT_ICON" 0
+check_path "noctalia shell" "${XDG_CONFIG_HOME:-$HOME/.config}/niri/quickshell/noctalia-shell/shell.qml" 0
 check_path "awww service" "${XDG_CONFIG_HOME:-$HOME/.config}/systemd/user/awww-daemon.service" 0
 check_path "restore service" "${XDG_CONFIG_HOME:-$HOME/.config}/systemd/user/niri-wallpaper-restore.service" 0
 

@@ -29,7 +29,7 @@ binds {
         spawn-sh "if command -v hyprpicker >/dev/null 2>&1; then hyprpicker -a && { command -v pw-play >/dev/null 2>&1 && pw-play /usr/share/sounds/freedesktop/stereo/message.oga || true; }; else notify-send 'niri' 'hyprpicker 未安装或不在 PATH 中'; fi"
     }
     Mod+Alt+V hotkey-overlay-title="剪贴板 Clipboard history" {
-        spawn-sh "qs ipc --any-display -c noctalia-shell call launcher clipboard"
+        spawn "~/.config/niri/scripts/noctalia-shell.sh" "ipc" "launcher" "clipboard"
     }
 
     // 壁纸、概览与会话
@@ -48,9 +48,9 @@ binds {
     Mod+F10 hotkey-overlay-title="随机壁纸 Random wallpaper" { spawn "~/.config/niri/scripts/wallpaper-sync.sh" "random"; }
     Mod+Shift+F10 hotkey-overlay-title="刷新壁纸与概览 Refresh wallpaper" { spawn "~/.config/niri/scripts/wallpaper-sync.sh" "refresh"; }
     Mod+F1 hotkey-overlay-title="输入法开关 Toggle fcitx" { spawn-sh "command -v fcitx5 >/dev/null 2>&1 && { pkill fcitx5 || fcitx5; }"; }
-    Mod+F4 hotkey-overlay-title="重载 Noctalia Shell Reload shell" { spawn-sh "command -v qs >/dev/null 2>&1 && { pkill -x qs || true; nohup qs -c noctalia-shell >/dev/null 2>&1 &; }"; }
+    Mod+F4 hotkey-overlay-title="重载 Noctalia Shell Reload shell" { spawn "~/.config/niri/scripts/noctalia-shell.sh" "reload"; }
     Mod+Ctrl+B hotkey-overlay-title="切换 Noctalia Shell Toggle shell" {
-        spawn-sh "command -v qs >/dev/null 2>&1 && { pkill -x qs || nohup qs -c noctalia-shell >/dev/null 2>&1 &; }"
+        spawn "~/.config/niri/scripts/noctalia-shell.sh" "toggle"
     }
     Mod+Ctrl+Shift+R hotkey-overlay-title="重载 niri 配置 Reload niri config" {
         spawn-sh "niri msg action load-config-file"

@@ -23,6 +23,7 @@ CONFIG_ITEMS=(
     "layout.kdl"
     "mouse-actions.json"
     "output.kdl"
+    "quickshell"
     "rule.kdl"
     "tray-cycle-order.json"
     "scripts"

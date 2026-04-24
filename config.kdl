@@ -117,7 +117,7 @@ spawn-sh-at-startup "systemctl --user set-environment XDG_SESSION_CLASS=user"
 // 通知程序
 spawn-sh-at-startup "command -v mako >/dev/null 2>&1 && mako || true"
 // Noctalia Shell
-spawn-sh-at-startup "command -v qs >/dev/null 2>&1 && qs -c noctalia-shell || true"
+spawn-at-startup "~/.config/niri/scripts/noctalia-shell.sh"
 // 启动后从当前 awww 壁纸同步 niri 壁纸状态与 overview 背景
 spawn-sh-at-startup "bash -lc 'sleep 6; ~/.config/niri/scripts/sync-current-wallpaper.sh --quiet || true'"
 // 输入法
