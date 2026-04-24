@@ -1,0 +1,26 @@
+# Ghostty visual layer reference.
+# Ghostty does not auto-load this file by default; the effective runtime copy
+# lives in ~/.config/ghostty/config.
+
+theme = catppuccin-frappe
+
+font-family = JetBrainsMono Nerd Font
+font-family = JetBrains Mono
+font-size = 14
+
+window-padding-x = 18
+window-padding-y = 12
+window-padding-balance = true
+window-padding-color = extend
+
+background-opacity = 0.92
+background-blur = 10
+
+cursor-style = block
+cursor-style-blink = false
+custom-shader = /home/source/.config/ghostty/shaders/cursor-trail.glsl
+custom-shader-animation = always
+
+window-decoration = none
+term = xterm-ghostty
+image-storage-limit = 512000000

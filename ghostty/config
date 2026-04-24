@@ -1,0 +1,28 @@
+# Ghostty main entrypoint.
+# This file is the only guaranteed auto-loaded config, so it contains the
+# effective runtime settings. The visual layer is mirrored in config.ghostty
+# for easier theme iteration.
+
+# Base behavior
+font-family = JetBrainsMono Nerd Font
+font-family = JetBrains Mono
+font-size = 14
+window-decoration = none
+mouse-hide-while-typing = true
+shell-integration = detect
+shell-integration-features = cursor,no-sudo,title
+term = xterm-ghostty
+image-storage-limit = 512000000
+
+# Visual layer
+theme = catppuccin-frappe
+window-padding-x = 18
+window-padding-y = 12
+window-padding-balance = true
+window-padding-color = extend
+background-opacity = 0.92
+background-blur = 10
+cursor-style = block
+cursor-style-blink = false
+custom-shader = /home/source/.config/ghostty/shaders/cursor-trail.glsl
+custom-shader-animation = always

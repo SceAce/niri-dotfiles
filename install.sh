@@ -9,6 +9,8 @@ NIRI_TARGET_DIR="$CONFIG_HOME/niri"
 HYPR_TARGET_DIR="$CONFIG_HOME/hypr"
 ROFI_TARGET_DIR="$CONFIG_HOME/rofi"
 NOCTALIA_TARGET_DIR="$CONFIG_HOME/noctalia"
+FASTFETCH_TARGET_DIR="$CONFIG_HOME/fastfetch"
+GHOSTTY_TARGET_DIR="$CONFIG_HOME/ghostty"
 SYSTEMD_USER_DIR="$CONFIG_HOME/systemd/user"
 BACKUP_ROOT="${XDG_STATE_HOME:-$HOME/.local/state}/niri-dotfiles-backups"
 MODE="symlink"
@@ -193,6 +195,18 @@ install_noctalia_config() {
     install_one "$REPO_ROOT/noctalia-config" "$NOCTALIA_TARGET_DIR"
 }
 
+install_fastfetch() {
+    if [[ -d "$REPO_ROOT/fastfetch" ]]; then
+        install_one "$REPO_ROOT/fastfetch" "$FASTFETCH_TARGET_DIR"
+    fi
+}
+
+install_ghostty() {
+    if [[ -d "$REPO_ROOT/ghostty" ]]; then
+        install_one "$REPO_ROOT/ghostty" "$GHOSTTY_TARGET_DIR"
+    fi
+}
+
 install_hyprlock() {
     mkdir -p "$HYPR_TARGET_DIR"
     install_one "$REPO_ROOT/hyprlock.conf" "$HYPR_TARGET_DIR/hyprlock.conf"
@@ -241,6 +255,8 @@ main() {
     install_hyprlock
     install_rofi
     install_noctalia_config
+    install_fastfetch
+    install_ghostty
     install_systemd_units
     install_wallpapers
     install_local_bin
@@ -250,6 +266,8 @@ main() {
     log "hyprlock config: $HYPR_TARGET_DIR/hyprlock.conf"
     log "rofi config: $ROFI_TARGET_DIR"
     log "noctalia config: $NOCTALIA_TARGET_DIR"
+    log "fastfetch config: $FASTFETCH_TARGET_DIR"
+    log "ghostty config: $GHOSTTY_TARGET_DIR"
     log "wallpapers: $WALLPAPER_TARGET_DIR"
     log "local bin: $LOCAL_BIN_DIR"
 }

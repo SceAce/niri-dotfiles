@@ -18,6 +18,7 @@ PACMAN_PACKAGES=(
     fcitx5-configtool
     fcitx5-gtk
     fcitx5-qt
+    fastfetch
     ghostty
     git
     grim

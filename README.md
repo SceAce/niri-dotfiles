@@ -9,6 +9,8 @@
 - `scripts/niri-user-config.sh`：集中放壁纸目录、内屏参数、Zen 路径、托盘图标路径等用户可调项。
 - `rofi/`：当前机器正在使用的 `rofi` 主题、脚本和图片资源。
 - `noctalia-config/`：当前机器的 `~/.config/noctalia` 运行配置。
+- `fastfetch/`：当前机器的 `~/.config/fastfetch` 配置和 logo 资源。
+- `ghostty/`：当前机器的 `~/.config/ghostty` 配置和 shader 资源。
 - `wallpapers/`：当前机器正在使用的壁纸目录，会安装到 `~/Pictures/Wallpapers/`（或 `scripts/niri-user-config.sh` 中定义的路径）。
 - `bin/start-niri`：当前机器使用的 `~/.local/bin/start-niri` 启动脚本。
 - `outputs/`：`niri` 输出布局 profile。
@@ -30,7 +32,7 @@ cd niri-dotfiles
 
 它会先安装这套环境依赖的软件，再执行仓库配置安装。也就是说它会同时完成：
 
-1. 用 `pacman` 安装 `niri`、`awww`、`quickshell`、`hyprlock`、`rofi`、`copyq`、`cliphist`、`wlsunset`、`swayidle`、`satty`、`grim`、`slurp`、`mako`、`fcitx5` 等运行时依赖
+1. 用 `pacman` 安装 `niri`、`awww`、`quickshell`、`hyprlock`、`rofi`、`ghostty`、`fastfetch`、`copyq`、`cliphist`、`wlsunset`、`swayidle`、`satty`、`grim`、`slurp`、`mako`、`fcitx5` 等运行时依赖
 2. 用 `cargo` 从 upstream 安装 `mouse-actions`
 3. 安装 `mouse-actions` 所需的 `udev` 规则，并把当前用户加入 `input` 组
 4. 启用 `power-profiles-daemon.service`
@@ -85,16 +87,20 @@ cd niri-dotfiles
 3. 把 `hyprlock.conf` 安装到 `~/.config/hypr/hyprlock.conf`
 4. 把当前机器的 `rofi` 样式安装到 `~/.config/rofi/`
 5. 把当前机器的 `Noctalia` 运行配置安装到 `~/.config/noctalia/`
-6. 把 `systemd/*.service` 安装到 `~/.config/systemd/user/`
-7. 把仓库里的壁纸目录安装到 `~/Pictures/Wallpapers/`（默认路径可由 `scripts/niri-user-config.sh` 控制）
-8. 把 `bin/` 下的本地脚本安装到 `~/.local/bin/`
-9. 自动执行一次 `systemctl --user daemon-reload`
+6. 把当前机器的 `fastfetch` 配置安装到 `~/.config/fastfetch/`
+7. 把当前机器的 `ghostty` 配置安装到 `~/.config/ghostty/`
+8. 把 `systemd/*.service` 安装到 `~/.config/systemd/user/`
+9. 把仓库里的壁纸目录安装到 `~/Pictures/Wallpapers/`（默认路径可由 `scripts/niri-user-config.sh` 控制）
+10. 把 `bin/` 下的本地脚本安装到 `~/.local/bin/`
+11. 自动执行一次 `systemctl --user daemon-reload`
 
 安装完成后建议先改一遍：
 
 - `~/.config/niri/scripts/niri-user-config.sh`
 - `~/.config/niri/output.kdl`
 - `~/.config/noctalia/settings.json`
+- `~/.config/fastfetch/config.jsonc`
+- `~/.config/ghostty/config`
 - `~/.local/bin/start-niri`
 - `~/.local/bin/toggle-wlsunset`
 
@@ -172,6 +178,40 @@ cd niri-dotfiles
 - clipboard 菜单样式
 - 图片和颜色主题资源
 
+## Fastfetch
+
+当前机器实际使用的 `fastfetch` 配置已经跟仓库一起保存，目录是：
+
+- `fastfetch/`
+
+安装后会落到：
+
+- `~/.config/fastfetch/`
+
+这会一起带上：
+
+- `config.jsonc`
+- `ascii/` 自定义 ASCII logo
+- `png/` 图片 logo 资源
+
+当前配置会从 `~/.config/fastfetch/png/` 随机选一张图片作为 logo。
+
+## Ghostty
+
+当前机器实际使用的 `ghostty` 配置已经跟仓库一起保存，目录是：
+
+- `ghostty/`
+
+安装后会落到：
+
+- `~/.config/ghostty/`
+
+这会一起带上：
+
+- `config`
+- `config.ghostty`
+- `shaders/cursor-trail.glsl`
+
 ## 输出布局
 
 `output.kdl` 现在不再只是单文件，而是走 profile 目录：
@@ -204,6 +244,8 @@ cd niri-dotfiles
 - `~/.config/niri/`
 - `~/.config/noctalia/`
 - `~/.config/rofi/`
+- `~/.config/fastfetch/`
+- `~/.config/ghostty/`
 - `~/.config/systemd/user/`
 - `~/Pictures/Wallpapers/`
 - `~/.local/bin/start-niri`
@@ -218,7 +260,7 @@ cd niri-dotfiles
 ```bash
 sudo pacman -S --needed \
   awww brightnessctl cliphist copyq curl fcitx5 fcitx5-configtool \
-  fcitx5-gtk fcitx5-qt ghostty git grim hyprlock hyprpicker jq libnotify \
+  fcitx5-gtk fcitx5-qt fastfetch ghostty git grim hyprlock hyprpicker jq libnotify \
   mako niri pavucontrol playerctl polkit-gnome power-profiles-daemon \
   python python-gobject quickshell rofi rust satty slurp swayosd swayidle \
   thunar wl-clipboard wlsunset xdg-desktop-portal-gnome xorg-xhost
@@ -231,6 +273,8 @@ sudo pacman -S --needed \
 - `qs`（Quickshell）
 - `satty`
 - `cliphist`
+- `fastfetch`
+- `ghostty`
 - `wlsunset`
 - `swayosd`
 
