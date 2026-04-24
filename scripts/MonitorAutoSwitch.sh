@@ -2,11 +2,13 @@
 
 set -euo pipefail
 
-INTERNAL="eDP-1"
-INTERNAL_MODE="2560x1440@165"
-INTERNAL_SCALE="1.3"
-INTERNAL_X="0"
-INTERNAL_Y="0"
+source "${HOME}/.config/niri/scripts/lib/niri-config.sh"
+
+INTERNAL="$NIRI_INTERNAL_OUTPUT"
+INTERNAL_MODE="$NIRI_INTERNAL_MODE"
+INTERNAL_SCALE="$NIRI_INTERNAL_SCALE"
+INTERNAL_X="$NIRI_INTERNAL_X"
+INTERNAL_Y="$NIRI_INTERNAL_Y"
 WALLPAPER_SYNC_SCRIPT="$HOME/.config/niri/scripts/wallpaper-sync.sh"
 AWWW_SERVICE_SCRIPT="$HOME/.config/niri/scripts/awww-daemon-service.sh"
 SYNC_LOCK_DIR="/tmp/niri-monitor-wallpaper-sync.lock"

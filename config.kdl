@@ -134,7 +134,7 @@ spawn-at-startup "~/.config/niri/scripts/swayidle.sh"
 // 大写锁定键的osd显示
 spawn-sh-at-startup "command -v swayosd-server >/dev/null 2>&1 && swayosd-server || true"
 // 自动开启护眼模式,经纬度设置位置
-spawn-sh-at-startup "[ -x ~/.local/bin/toggle-wlsunset ] && ~/.local/bin/toggle-wlsunset || true"
+spawn-at-startup "~/.config/niri/scripts/toggle-wlsunset.sh"
 // 显示器热插拔自动切换
 spawn-at-startup "~/.config/niri/scripts/MonitorAutoSwitch.sh"
 // 允许root通过用户的xwayland打开窗口

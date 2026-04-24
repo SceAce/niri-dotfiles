@@ -14,7 +14,10 @@
         ]
       },
       "cmd": [
-        "/home/source/.config/niri/scripts/rofi-launcher.sh"
+        "/usr/bin/env",
+        "bash",
+        "-lc",
+        "$HOME/.config/niri/scripts/rofi-launcher.sh"
       ]
     },
     {
@@ -66,7 +69,10 @@
         ]
       },
       "cmd": [
-        "/home/source/.config/niri/scripts/mouse-gesture-browser.sh"
+        "/usr/bin/env",
+        "bash",
+        "-lc",
+        "$HOME/.config/niri/scripts/mouse-gesture-browser.sh"
       ]
     },
     {

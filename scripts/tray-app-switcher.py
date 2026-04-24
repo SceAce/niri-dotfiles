@@ -13,6 +13,7 @@ gi.require_version("Gtk", "4.0")
 from gi.repository import Gdk, Gio, Gtk  # noqa: E402
 
 ORDER_FILE = Path.home() / ".config" / "niri" / "tray-cycle-order.json"
+USER_CONFIG_FILE = Path.home() / ".config" / "niri" / "scripts" / "niri-user-config.sh"
 LOG_FILE = Path("/tmp/niri-tray-cycle.log")
 DEFAULT_ORDER = [
     "QQ",
@@ -22,10 +23,7 @@ TRAY_PATTERNS = {
     "QQ": ["qq", "linuxqq", "tencent-qq", "tencent qq", "chrome_status_icon"],
     "wechat": ["wechat", "weixin", "wxwork", "tencent-wechat", "tencent wechat"],
 }
-APP_ICONS = {
-    "QQ": "/home/source/tools/LinuxQQ/qq.png",
-    "wechat": "/home/source/tools/Wechat/wechat.png",
-}
+APP_ICONS = {}
 HIDDEN_PATTERNS = [
     "copyq",
     "fcitx",
@@ -39,6 +37,27 @@ HIDDEN_PATTERNS = [
 def log(message: str) -> None:
     with LOG_FILE.open("a", encoding="utf-8") as fh:
         fh.write(message + "\n")
+
+
+def load_user_config() -> dict[str, str]:
+    config: dict[str, str] = {}
+    if not USER_CONFIG_FILE.exists():
+        return config
+
+    for raw_line in USER_CONFIG_FILE.read_text(encoding="utf-8").splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("#"):
+            continue
+        if "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        key = key.strip()
+        value = value.strip()
+        if len(value) >= 2 and value[0] == value[-1] and value[0] in {"'", '"'}:
+            value = value[1:-1]
+        value = value.replace("${HOME}", str(Path.home())).replace("$HOME", str(Path.home()))
+        config[key] = value
+    return config
 
 
 def run_text(command: list[str]) -> tuple[int, str, str]:
@@ -134,6 +153,11 @@ def unwrap_variant(value: str) -> str:
 
 
 def collect_candidates() -> list[dict]:
+    user_config = load_user_config()
+    app_icons = {
+        "QQ": user_config.get("NIRI_TRAY_QQ_ICON", str(Path.home() / "tools/LinuxQQ/qq.png")),
+        "wechat": user_config.get("NIRI_TRAY_WECHAT_ICON", str(Path.home() / "tools/Wechat/wechat.png")),
+    }
     order = load_order()
     tray_items = get_tray_items()
     log(f"tray_items={tray_items}")
@@ -165,7 +189,7 @@ def collect_candidates() -> list[dict]:
                         "name": name,
                         "item": item["item"],
                         "metadata": item["metadata"],
-                        "icon_path": APP_ICONS.get(name, ""),
+                        "icon_path": app_icons.get(name, ""),
                         "icon_name": unwrap_variant(item["metadata"].get("IconName", "")),
                     }
                 )

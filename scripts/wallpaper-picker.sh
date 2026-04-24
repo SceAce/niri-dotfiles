@@ -2,7 +2,9 @@
 
 set -euo pipefail
 
-WALLPAPER_DIR="${WALLPAPER_DIR:-$HOME/Pictures/Wallpapers}"
+source "${HOME}/.config/niri/scripts/lib/niri-config.sh"
+
+WALLPAPER_DIR="${WALLPAPER_DIR:-$NIRI_WALLPAPER_DIR}"
 MODE="${1:-}"
 SELECTED_ARG="${2:-}"
 

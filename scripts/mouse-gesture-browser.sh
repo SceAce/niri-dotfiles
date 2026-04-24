@@ -2,10 +2,14 @@
 
 set -euo pipefail
 
-if [[ -x /home/source/tools/zen/zen ]]; then
-    exec /home/source/tools/zen/zen
-elif [[ -x /home/source/opt/zen/zen ]]; then
-    exec /home/source/opt/zen/zen
-else
-    exec xdg-open 'https://'
-fi
+source "${HOME}/.config/niri/scripts/lib/niri-config.sh"
+
+IFS=':' read -r -a zen_candidates <<<"$NIRI_ZEN_CANDIDATES"
+
+for candidate in "${zen_candidates[@]}"; do
+    if [[ -x "$candidate" ]]; then
+        exec "$candidate"
+    fi
+done
+
+exec xdg-open 'https://'

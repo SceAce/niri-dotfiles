@@ -2,6 +2,8 @@
 
 set -euo pipefail
 
+source "${HOME}/.config/niri/scripts/lib/niri-config.sh"
+
 CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/niri"
 STATE_FILE="$CACHE_DIR/current-wallpaper"
 OVERVIEW_IMAGE="$CACHE_DIR/overview-wallpaper.png"
@@ -11,7 +13,7 @@ CURRENT_LINK="${XDG_CACHE_HOME:-$HOME/.cache}/.current_wallpaper"
 OVERVIEW_LOCK_DIR="$CACHE_DIR/overview.lock"
 OVERVIEW_BATCH_LOCK_DIR="$CACHE_DIR/overview-batch.lock"
 DEFAULT_DIR_CANDIDATES=(
-    "$HOME/Pictures/Wallpapers"
+    "$NIRI_WALLPAPER_DIR"
     "$HOME/Pictures/wallpapers"
 )
 WALLPAPER_TRANSITION_TYPE="${WALLPAPER_TRANSITION_TYPE:-fade}"
@@ -28,7 +30,7 @@ have() {
 
 warn_no_wallpaper() {
     if have notify-send; then
-        notify-send "niri" "未找到可用壁纸，请检查 ~/Pictures/Wallpapers"
+        notify-send "niri" "未找到可用壁纸，请检查 $NIRI_WALLPAPER_DIR"
     fi
 }
 
