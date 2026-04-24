@@ -1,0 +1,15 @@
+[Unit]
+Description=awww wallpaper daemons for niri
+After=graphical-session-pre.target
+PartOf=graphical-session.target
+
+[Service]
+Type=simple
+Environment=PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+ExecCondition=/usr/bin/env sh -c '(command -v awww-daemon >/dev/null 2>&1 || command -v awww >/dev/null 2>&1) && [ -n "$WAYLAND_DISPLAY" ]'
+ExecStart=%h/.config/niri/scripts/awww-daemon-service.sh
+Restart=on-failure
+RestartSec=1
+
+[Install]
+WantedBy=default.target

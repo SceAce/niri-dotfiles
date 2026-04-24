@@ -1,0 +1,26 @@
+// niri 原生触摸板手势：
+// - 三指上下：切换工作区
+// - 三指左右：水平移动视图
+// - 四指上下：打开/关闭 overview
+//
+// 这些手势在支持的触摸板上默认可用；这里单独拆出 gestures.kdl，
+// 主要是为了显式管理手势相关设置，并关闭鼠标热角，避免误触。
+gestures {
+    // 保持拖拽时的边缘滚动为默认值，兼容 overview 与普通拖放。
+    dnd-edge-view-scroll {
+        trigger-width 30
+        delay-ms 100
+        max-speed 1500
+    }
+
+    dnd-edge-workspace-switch {
+        trigger-height 50
+        delay-ms 100
+        max-speed 1500
+    }
+
+    // 不启用鼠标热角，避免移动到屏幕角落时误开 overview。
+    hot-corners {
+        off
+    }
+}
