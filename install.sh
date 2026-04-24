@@ -6,10 +6,13 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
 NIRI_TARGET_DIR="$CONFIG_HOME/niri"
 HYPR_TARGET_DIR="$CONFIG_HOME/hypr"
+ROFI_TARGET_DIR="$CONFIG_HOME/rofi"
+NOCTALIA_TARGET_DIR="$CONFIG_HOME/noctalia"
 SYSTEMD_USER_DIR="$CONFIG_HOME/systemd/user"
 BACKUP_ROOT="${XDG_STATE_HOME:-$HOME/.local/state}/niri-dotfiles-backups"
 MODE="symlink"
 FORCE=0
+OUTPUT_PROFILE="current-machine"
 
 CONFIG_ITEMS=(
     "Keybinds_README.md"
@@ -22,21 +25,25 @@ CONFIG_ITEMS=(
     "input.kdl"
     "layout.kdl"
     "mouse-actions.json"
-    "output.kdl"
     "quickshell"
     "rule.kdl"
     "tray-cycle-order.json"
     "scripts"
     "systemd"
+    "outputs"
 )
 
 usage() {
     cat <<'EOF'
-Usage: ./install.sh [--copy] [--force]
+Usage: ./install.sh [--copy] [--force] [--output-profile <name>] [--list-output-profiles]
 
 Options:
   --copy   Copy files instead of creating symlinks.
   --force  Replace existing files directly instead of backing them up first.
+  --output-profile <name>
+           Install the selected output profile as ~/.config/niri/output.kdl.
+  --list-output-profiles
+           Print available output profiles and exit.
   -h, --help
 EOF
 }
@@ -114,6 +121,18 @@ parse_args() {
             --force)
                 FORCE=1
                 ;;
+            --output-profile)
+                shift
+                OUTPUT_PROFILE="${1:-}"
+                if [[ -z "$OUTPUT_PROFILE" ]]; then
+                    echo "--output-profile requires a profile name" >&2
+                    exit 2
+                fi
+                ;;
+            --list-output-profiles)
+                list_output_profiles
+                exit 0
+                ;;
             -h|--help)
                 usage
                 exit 0
@@ -128,6 +147,11 @@ parse_args() {
     done
 }
 
+list_output_profiles() {
+    local profile_dir="$REPO_ROOT/outputs/profiles"
+    find "$profile_dir" -maxdepth 1 -type f -name '*.kdl' -printf '%f\n' | sed 's/\.kdl$//' | sort
+}
+
 install_config_tree() {
     local item
     mkdir -p "$NIRI_TARGET_DIR"
@@ -135,6 +159,29 @@ install_config_tree() {
     for item in "${CONFIG_ITEMS[@]}"; do
         install_one "$REPO_ROOT/$item" "$NIRI_TARGET_DIR/$item"
     done
+}
+
+install_output_profile() {
+    local src="$REPO_ROOT/outputs/profiles/$OUTPUT_PROFILE.kdl"
+    local dst="$NIRI_TARGET_DIR/output.kdl"
+
+    if [[ ! -f "$src" ]]; then
+        echo "Unknown output profile: $OUTPUT_PROFILE" >&2
+        echo "Available profiles:" >&2
+        list_output_profiles >&2
+        exit 2
+    fi
+
+    install_one "$src" "$dst"
+    log "selected output profile: $OUTPUT_PROFILE"
+}
+
+install_rofi() {
+    install_one "$REPO_ROOT/rofi" "$ROFI_TARGET_DIR"
+}
+
+install_noctalia_config() {
+    install_one "$REPO_ROOT/noctalia-config" "$NOCTALIA_TARGET_DIR"
 }
 
 install_hyprlock() {
@@ -162,12 +209,17 @@ install_systemd_units() {
 main() {
     parse_args "$@"
     install_config_tree
+    install_output_profile
     install_hyprlock
+    install_rofi
+    install_noctalia_config
     install_systemd_units
 
     log "done"
     log "niri config: $NIRI_TARGET_DIR"
     log "hyprlock config: $HYPR_TARGET_DIR/hyprlock.conf"
+    log "rofi config: $ROFI_TARGET_DIR"
+    log "noctalia config: $NOCTALIA_TARGET_DIR"
 }
 
 main "$@"

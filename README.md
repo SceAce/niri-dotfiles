@@ -7,6 +7,9 @@
 - `config.kdl` 和若干 `*.kdl`：主配置与拆分模块。
 - `scripts/`：壁纸、截图、锁屏、快捷菜单、托盘轮切、显示器热插拔等脚本。
 - `scripts/niri-user-config.sh`：集中放壁纸目录、内屏参数、Zen 路径、托盘图标路径等用户可调项。
+- `rofi/`：当前机器正在使用的 `rofi` 主题、脚本和图片资源。
+- `noctalia-config/`：当前机器的 `~/.config/noctalia` 运行配置。
+- `outputs/`：`niri` 输出布局 profile。
 - `quickshell/noctalia-shell/`：仓库内置的 Noctalia / Quickshell 状态栏与桌面壳配置。
 - `systemd/`：用户级 `systemd` 服务，负责 `awww` 壁纸 daemon 和壁纸状态恢复。
 - `hyprlock.conf`：锁屏界面配置。
@@ -22,10 +25,22 @@ cd niri-dotfiles
 ./install.sh
 ```
 
+安装前可以先看可用的输出布局：
+
+```bash
+./install.sh --list-output-profiles
+```
+
+如果你想显式指定布局：
+
+```bash
+./install.sh --output-profile current-machine
+```
+
 如果你想复制文件而不是软链接：
 
 ```bash
-./install.sh --copy
+./install.sh --copy --output-profile current-machine
 ```
 
 如果目标路径已有旧文件，脚本默认会先备份到 `~/.local/state/niri-dotfiles-backups/`。确认不需要备份时可加 `--force`。
@@ -33,16 +48,20 @@ cd niri-dotfiles
 安装脚本会做这些事：
 
 1. 把仓库里的配置安装到 `~/.config/niri/`
-2. 把 `hyprlock.conf` 安装到 `~/.config/hypr/hyprlock.conf`
-3. 把 `systemd/*.service` 安装到 `~/.config/systemd/user/`
-4. 自动执行一次 `systemctl --user daemon-reload`
+2. 根据 `--output-profile` 选择一个布局并生成 `~/.config/niri/output.kdl`
+3. 把 `hyprlock.conf` 安装到 `~/.config/hypr/hyprlock.conf`
+4. 把当前机器的 `rofi` 样式安装到 `~/.config/rofi/`
+5. 把当前机器的 `Noctalia` 运行配置安装到 `~/.config/noctalia/`
+6. 把 `systemd/*.service` 安装到 `~/.config/systemd/user/`
+7. 自动执行一次 `systemctl --user daemon-reload`
 
 安装完成后建议先改一遍：
 
 - `~/.config/niri/scripts/niri-user-config.sh`
-- `output.kdl`
+- `~/.config/niri/output.kdl`
+- `~/.config/noctalia/settings.json`
 
-其中 `niri-user-config.sh` 负责脚本层的集中参数；`output.kdl` 仍然是 niri 原生输出配置，需要按你自己的显示器名字、模式和缩放单独调整。
+其中 `niri-user-config.sh` 负责脚本层的集中参数；`output.kdl` 现在由 `outputs/profiles/*.kdl` 生成，你可以直接改 profile 文件，或者在安装时切换 profile。
 
 ## 快速自检
 
@@ -54,7 +73,7 @@ cd niri-dotfiles
 
 - 核心命令是否存在
 - 可选增强组件是否存在
-- 壁纸目录、matugen 颜色缓存、rofi 配置目录、托盘图标路径是否存在
+- 壁纸目录、matugen 颜色缓存、rofi 配置目录、Noctalia 配置、托盘图标路径是否存在
 - `Noctalia Shell` 的 `shell.qml` 是否已经安装
 - `systemd --user` 服务文件是否已安装
 
@@ -82,6 +101,42 @@ cd niri-dotfiles
 - `qs`
 - `cliphist`
 - `curl`
+
+## Rofi 样式
+
+当前机器实际使用的 `rofi` 配置已经跟仓库一起保存，目录是：
+
+- `rofi/`
+
+安装后会落到：
+
+- `~/.config/rofi/`
+
+这意味着以下内容都会一起跟进：
+
+- launcher 样式
+- powermenu 样式
+- clipboard 菜单样式
+- 图片和颜色主题资源
+
+## 输出布局
+
+`output.kdl` 现在不再只是单文件，而是走 profile 目录：
+
+- `outputs/profiles/current-machine.kdl`
+- `outputs/profiles/laptop-only.example.kdl`
+
+安装时通过：
+
+```bash
+./install.sh --output-profile current-machine
+```
+
+把选中的 profile 生成到：
+
+- `~/.config/niri/output.kdl`
+
+如果你换机器，建议新增一个 profile，而不是长期直接手改安装结果。
 
 ## Arch 依赖
 
@@ -178,19 +233,19 @@ Gentoo 这边我不把所有包名写死，因为 overlay、profile 和关键字
 
 - 壁纸目录、Zen 路径、托盘图标路径、内屏参数等脚本级配置集中在 `scripts/niri-user-config.sh`
 - `hyprlock.conf` 依赖 `~/.cache/matugen/hypr/colors.conf`
-- `rofi` 主题配置默认引用 `~/.config/rofi/`
+- `rofi` 主题配置现在会由仓库安装到 `~/.config/rofi/`
 - `Mod+F9` 和启动时护眼模式会调用 `scripts/niri-user-config.sh` 里定义的 `NIRI_TOGGLE_WLSUNSET`
 - `clipsync` 是我本地启用的 `systemd --user` 服务，不在本仓库里
 - `Noctalia Shell` 自己会使用 `~/.config/noctalia/`、`~/.cache/noctalia/` 这类运行时目录保存设置、缓存和插件状态
 
-现在这些值已经集中到 `scripts/niri-user-config.sh` 里，不需要再改多个脚本。
+现在脚本层参数已经集中到 `scripts/niri-user-config.sh`，而样式层则直接跟着仓库里的 `rofi/`、`noctalia-config/` 和 `outputs/` 走。
 
 ## 已知问题
 
-- `output.kdl` 里的输出名、刷新率和缩放还是机器相关配置，换设备后需要手动改。
+- `output.kdl` 现在是由 `outputs/profiles/*.kdl` 安装生成的；换设备时建议新增一个 profile，而不是长期手改安装结果。
 - `systemctl --user daemon-reload` 在没有 user bus 的纯脚本环境里会跳过，但正常登录图形会话后通常可用。
 - `hyprlock.conf` 依赖 `~/.cache/matugen/hypr/colors.conf`；如果没有这个文件，锁屏主题颜色不会按当前设计工作。
-- `rofi` 主题文件不在本仓库里，如果你没有自己的 `~/.config/rofi/`，启动器和电源菜单会退回到比较朴素的效果。
+- `Noctalia` 的 `settings.json` 已经按我当前机器样式一并纳入，但其中仍可能包含设备、插件或习惯相关选项。
 - `clipsync` 不是仓库内容，只是当前配置里“存在则启动”的额外服务。
 - `Noctalia Shell` 是直接 vendor 进仓库的上游配置，体积会明显变大；后续如果你继续深改它，最好在这个 repo 内持续维护，而不是再依赖外部目录。
 

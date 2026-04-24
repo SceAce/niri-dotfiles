@@ -1,0 +1,92 @@
+configuration {
+  show-icons: true;
+  display-tray: "";
+}
+
+* {
+  background: rgba(6, 12, 20, 0.62);
+  background-alt: rgba(255, 255, 255, 0.0);
+  foreground: rgba(220, 235, 255, 0.96);
+  selected: rgba(196, 226, 255, 0.12);
+  selected-border: rgba(196, 226, 255, 0.26);
+  border: rgba(198, 226, 255, 0.16);
+}
+
+window {
+  width: 720px;
+  location: center;
+  anchor: center;
+  transparency: "real";
+  background-color: @background;
+  border: 1px;
+  border-color: @border;
+  border-radius: 30px;
+  padding: 16px 20px;
+}
+
+mainbox {
+  children: [ listview ];
+}
+
+listview {
+  columns: 10;
+  lines: 1;
+  fixed-columns: true;
+  fixed-height: true;
+  dynamic: false;
+  cycle: true;
+  scrollbar: false;
+  spacing: 6px;
+  layout: horizontal;
+  require-input: false;
+}
+
+element {
+  orientation: vertical;
+  children: [ element-icon ];
+  background-color: transparent;
+  border: 1px;
+  border-color: transparent;
+  border-radius: 24px;
+  padding: 8px;
+  width: 78px;
+}
+
+element normal.normal {
+  background-color: @background-alt;
+  border-color: transparent;
+}
+
+element selected.normal {
+  background-color: @selected;
+  border-color: @selected-border;
+}
+
+element-icon {
+  size: 76px;
+  background-color: transparent;
+}
+
+element-text {
+  enabled: false;
+}
+
+inputbar {
+  enabled: false;
+}
+
+message {
+  enabled: false;
+}
+
+textbox-prompt-colon {
+  enabled: false;
+}
+
+prompt {
+  enabled: false;
+}
+
+entry {
+  enabled: false;
+}

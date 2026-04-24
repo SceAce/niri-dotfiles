@@ -56,6 +56,13 @@ check_path "wallpaper dir" "$NIRI_WALLPAPER_DIR" 0
 check_path "toggle-wlsunset" "$NIRI_TOGGLE_WLSUNSET" 0
 check_path "hyprlock colors" "$HOME/.cache/matugen/hypr/colors.conf" 0
 check_path "rofi config dir" "$HOME/.config/rofi" 0
+check_path "rofi main config" "$HOME/.config/rofi/config.rasi" 0
+check_path "rofi launcher style" "$HOME/.config/rofi/launchers/type-6/launcher.sh" 0
+check_path "rofi powermenu style" "$HOME/.config/rofi/powermenu/type-6/style-1.rasi" 0
+check_path "output profile file" "${XDG_CONFIG_HOME:-$HOME/.config}/niri/output.kdl" 1
+check_path "output profiles dir" "${XDG_CONFIG_HOME:-$HOME/.config}/niri/outputs/profiles" 0
+check_path "noctalia settings" "$HOME/.config/noctalia/settings.json" 0
+check_path "noctalia colors" "$HOME/.config/noctalia/colors.json" 0
 check_path "tray QQ icon" "$NIRI_TRAY_QQ_ICON" 0
 check_path "tray WeChat icon" "$NIRI_TRAY_WECHAT_ICON" 0
 check_path "noctalia shell" "${XDG_CONFIG_HOME:-$HOME/.config}/niri/quickshell/noctalia-shell/shell.qml" 0
