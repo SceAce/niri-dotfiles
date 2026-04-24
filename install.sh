@@ -4,6 +4,7 @@ set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+LOCAL_BIN_DIR="${HOME}/.local/bin"
 NIRI_TARGET_DIR="$CONFIG_HOME/niri"
 HYPR_TARGET_DIR="$CONFIG_HOME/hypr"
 ROFI_TARGET_DIR="$CONFIG_HOME/rofi"
@@ -13,6 +14,14 @@ BACKUP_ROOT="${XDG_STATE_HOME:-$HOME/.local/state}/niri-dotfiles-backups"
 MODE="symlink"
 FORCE=0
 OUTPUT_PROFILE="current-machine"
+
+# Reuse the wallpaper destination defined by the repo's user config when present.
+WALLPAPER_TARGET_DIR="${HOME}/Pictures/Wallpapers"
+if [[ -f "$REPO_ROOT/scripts/niri-user-config.sh" ]]; then
+    # shellcheck disable=SC1091
+    source "$REPO_ROOT/scripts/niri-user-config.sh"
+    WALLPAPER_TARGET_DIR="${NIRI_WALLPAPER_DIR:-$WALLPAPER_TARGET_DIR}"
+fi
 
 CONFIG_ITEMS=(
     "Keybinds_README.md"
@@ -206,6 +215,25 @@ install_systemd_units() {
     fi
 }
 
+install_wallpapers() {
+    if [[ -d "$REPO_ROOT/wallpapers" ]]; then
+        install_one "$REPO_ROOT/wallpapers" "$WALLPAPER_TARGET_DIR"
+    fi
+}
+
+install_local_bin() {
+    mkdir -p "$LOCAL_BIN_DIR"
+    if [[ ! -d "$REPO_ROOT/bin" ]]; then
+        return 0
+    fi
+
+    local file
+    for file in "$REPO_ROOT"/bin/*; do
+        [[ -e "$file" ]] || continue
+        install_one "$file" "$LOCAL_BIN_DIR/$(basename "$file")"
+    done
+}
+
 main() {
     parse_args "$@"
     install_config_tree
@@ -214,12 +242,16 @@ main() {
     install_rofi
     install_noctalia_config
     install_systemd_units
+    install_wallpapers
+    install_local_bin
 
     log "done"
     log "niri config: $NIRI_TARGET_DIR"
     log "hyprlock config: $HYPR_TARGET_DIR/hyprlock.conf"
     log "rofi config: $ROFI_TARGET_DIR"
     log "noctalia config: $NOCTALIA_TARGET_DIR"
+    log "wallpapers: $WALLPAPER_TARGET_DIR"
+    log "local bin: $LOCAL_BIN_DIR"
 }
 
 main "$@"

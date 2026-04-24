@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+if [[ -f "${XDG_CONFIG_HOME:-$HOME/.config}/niri/scripts/lib/niri-config.sh" ]]; then
+    # shellcheck disable=SC1091
+    source "${XDG_CONFIG_HOME:-$HOME/.config}/niri/scripts/lib/niri-config.sh"
+fi
+
+LATITUDE="${NIRI_WLSUNSET_LATITUDE:-31.2304}"
+LONGITUDE="${NIRI_WLSUNSET_LONGITUDE:-121.4737}"
+TEMP_DAY="${NIRI_WLSUNSET_TEMP_DAY:-6500}"
+TEMP_NIGHT="${NIRI_WLSUNSET_TEMP_NIGHT:-3700}"
+GAMMA="${NIRI_WLSUNSET_GAMMA:-0.9}"
+
+if ! command -v wlsunset >/dev/null 2>&1; then
+    command -v notify-send >/dev/null 2>&1 && notify-send "niri" "wlsunset 未安装或不在 PATH 中"
+    exit 1
+fi
+
+if pgrep -x wlsunset >/dev/null 2>&1; then
+    pkill -x wlsunset
+    command -v notify-send >/dev/null 2>&1 && notify-send "niri" "Night light disabled"
+    exit 0
+fi
+
+nohup wlsunset \
+    -l "$LATITUDE" \
+    -L "$LONGITUDE" \
+    -t "$TEMP_DAY" \
+    -T "$TEMP_NIGHT" \
+    -g "$GAMMA" \
+    >/dev/null 2>&1 &
+
+command -v notify-send >/dev/null 2>&1 && notify-send "niri" "Night light enabled"

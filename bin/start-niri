@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [[ -n "${WAYLAND_DISPLAY:-}" || -n "${DISPLAY:-}" ]]; then
+  echo "start-niri: detected an existing graphical session; refusing to start nested niri." >&2
+  exit 1
+fi
+
+if [[ ! -t 0 ]]; then
+  echo "start-niri: run this from a real tty login shell." >&2
+  exit 1
+fi
+
+export XDG_SESSION_TYPE=wayland
+export XDG_CURRENT_DESKTOP=niri
+export XDG_SESSION_DESKTOP=niri
+export DESKTOP_SESSION=niri
+
+exec dbus-run-session /usr/local/bin/niri --session
